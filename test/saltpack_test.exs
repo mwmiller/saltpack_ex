@@ -13,6 +13,19 @@ defmodule SaltpackTest do
     assert Saltpack.encrypt_message(long_message, [apk], bsk) |> Saltpack.open_message(ask)  == long_message
   end
 
+  test "signing cycles" do
+    {ask, apk} = Saltpack.new_key_pair(:sign)
+
+    short_message = :crypto.rand_bytes(32)
+    long_message  = :crypto.rand_bytes(8192)
+
+    assert Saltpack.sign_message(short_message, ask) |> Saltpack.open_message == short_message
+    assert Saltpack.sign_message(long_message, ask) |> Saltpack.open_message  == long_message
+
+    assert Saltpack.sign_message(short_message, ask, "", :detached, apk) |> Saltpack.open_message(nil, short_message) == apk
+
+  end
+
   test "armor cycle" do
     {ask, _apk}    = Saltpack.new_key_pair # Not actually needed, but showing API obliviousness
     short_message = :crypto.rand_bytes(32)

@@ -26,8 +26,10 @@ defmodule Saltpack.Crypt do
     }
   end
 
-  def create_message(payload, recipients, private) do
-    {header, macs, payload_key, header_hash} = pack_header(recipients, private, Kcl.derive_public_key(private))
+  def create_message(payload, recipients, private, public \\ nil)
+  def create_message(payload, recipients, private, public) when public == nil, do: create_message(payload, recipients, private, Kcl.derive_public_key(private, :encrypt))
+  def create_message(payload, recipients, private, public) do
+    {header, macs, payload_key, header_hash} = pack_header(recipients, private, public)
     header<>pack_payload(payload, macs, payload_key,header_hash,0,[])
   end
 
