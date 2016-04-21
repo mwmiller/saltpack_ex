@@ -21,7 +21,7 @@ defmodule Saltpack.Mixfile do
   defp deps do
     [
       {:basex, "~> 0.2"},
-      {:kcl, "~> 0.5"},
+      {:kcl, "~> 0.6"},
       {:msgpax, "~> 0.8"},
       {:power_assert, "~> 0.0.8", only: :test},
       {:earmark, ">= 0.0.0", only: :dev},
