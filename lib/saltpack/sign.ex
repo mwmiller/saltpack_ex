@@ -30,8 +30,11 @@ defmodule Saltpack.Sign do
   end
 
   defp detached_signature(text, hash, private, public) do
-     mode_constant(2)<>:crypto.hash(:sha512, text<>hash)
+    mode_constant(2)<>:crypto.hash(:sha512, hash<>text)
       |> Kcl.sign(private,public)
+      |> Msgpax.Bin.new
+      |> Msgpax.pack!
+      |> IO.iodata_to_binary
   end
 
   defp nonce(n), do: n |> :binary.encode_unsigned |> pad(8)
