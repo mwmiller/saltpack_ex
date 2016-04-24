@@ -69,7 +69,7 @@ defmodule Saltpack.Sign do
   end
 
   defp verify_msg_match({signature, hhash, opub}, text) do
-    if Kcl.valid_signature?(signature, mode_constant(2)<>:crypto.hash(:sha512, text<>hhash), opub), do: opub, else: sign_error
+    if Kcl.valid_signature?(signature |> Msgpax.unpack!, mode_constant(2)<>:crypto.hash(:sha512, hhash<>text), opub), do: opub, else: sign_error
   end
 
   defp payloads_open(_finished_payloads, _n, [""|acc]), do: acc |> Enum.reverse |> Enum.join
