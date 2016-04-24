@@ -13,7 +13,7 @@ defmodule SaltpackArmorTest do
 
   test "armor messages" do
     assert armor_message("short", "MESSAGE") == "BEGIN SALTPACK MESSAGE.\n8j34xXQ.\nEND SALTPACK MESSAGE.", "Simple message"
-    assert armor_message("short", "MESSAGE", "CRYPTOFUN") == "BEGIN CRYPTOFUN SALTPACK MESSAGE.\n8j34xXQ.\nEND CRYPTOFUN SALTPACK MESSAGE.", "Simple message with application name"
+    assert armor_message("short", "MESSAGE", [app: "CRYPTOFUN", chars_per_word: 2, words_per_line: 3]) == "BEGIN CRYPTOFUN SALTPACK MESSAGE.\n8j 34 xX\nQ.\nEND CRYPTOFUN SALTPACK MESSAGE.", "Self-selected formatting"
   end
 
   test "dearmor messages" do

@@ -22,7 +22,7 @@ defmodule SaltpackTest do
     assert Saltpack.sign_message(short_message, ask) |> Saltpack.open_message == short_message
     assert Saltpack.sign_message(long_message, ask) |> Saltpack.open_message  == long_message
 
-    assert Saltpack.sign_message(short_message, ask, "", :detached, apk) |> Saltpack.open_message(nil, short_message) == apk
+    assert Saltpack.sign_message(short_message, ask, apk, :detached) |> Saltpack.open_message(nil, short_message) == apk
 
   end
 

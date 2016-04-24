@@ -24,6 +24,7 @@ defmodule Saltpack do
   """
   @type signature_mode :: :attached | :detached
 
+
   @doc """
   generate a new `{private, public}` key pair
   """
@@ -35,40 +36,36 @@ defmodule Saltpack do
 
   `recipients` should contain a list of all recipient public keys.
   An entry may be `nil` for anonymous recipients.
-
-  Any supplied `app` name will appear in the message ASCII armoring.
   """
-  @spec encrypt_message(binary, [key], key, String.t, key) :: binary
-  def encrypt_message(message, recipients, private, app \\ "", public \\ nil) do
+  @spec encrypt_message(binary, [key], key, key, Saltpack.Armor.formatting_options) :: binary
+  def encrypt_message(message, recipients, private, public \\ nil, opts \\ []) do
      Saltpack.Crypt.create_message(message, recipients, private, public)
-       |> Saltpack.Armor.armor_message("ENCRYPTED MESSAGE", app)
+       |> Saltpack.Armor.armor_message("ENCRYPTED MESSAGE", opts)
   end
 
   @doc """
   sign a new message
 
   This is presently considerably slower than encrypting a same-sized message and
-  has slightly different calling semantics. Where possible, `encrypt_message/4` should
+  has slightly different calling semantics. Where possible, `encrypt_message/5` should
   be preferred.
   """
-  @spec sign_message(binary, key, String.t, signature_mode, key) :: binary
-  def sign_message(message, private, app \\ "", mode \\ :attached, public \\ nil)
-  def sign_message(message, private, app, :attached, public) do
+  @spec sign_message(binary, key, key, signature_mode, Saltpack.Armor.formatting_options) :: binary
+  def sign_message(message, private, public \\ nil, mode \\ :attached, opts \\ [])
+  def sign_message(message, private, public, :attached, opts) do
      Saltpack.Sign.create_message(message, private, 1, public)
-       |> Saltpack.Armor.armor_message("SIGNED MESSAGE", app)
+       |> Saltpack.Armor.armor_message("SIGNED MESSAGE", opts)
   end
-  def sign_message(message, private, app, :detached, public) do
+  def sign_message(message, private, public, :detached, opts) do
      Saltpack.Sign.create_message(message, private, 2, public)
-       |> Saltpack.Armor.armor_message("DETACHED SIGNATURE", app)
+       |> Saltpack.Armor.armor_message("DETACHED SIGNATURE", opts)
   end
 
   @doc """
   armor a new message
-
-  Any supplied `app` name will appear in the message ASCII armoring.
   """
-  @spec armor_message(binary, String.t) :: binary
-  def armor_message(message, app \\ ""), do: message |> Saltpack.Armor.armor_message("MESSAGE", app)
+  @spec armor_message(binary, Saltpack.Armor.formatting_options) :: binary
+  def armor_message(message, opts \\ []), do: message |> Saltpack.Armor.armor_message("MESSAGE", opts)
 
   @doc """
   open a saltpack message
@@ -77,7 +74,7 @@ defmodule Saltpack do
   formatted for the supplied key.
 
   Opening a detached signature with plaintext will return the signing public key.
-  All other versions return the decoded contents upon validation.
+  All other forms return the decoded contents upon validation.
   """
   @spec open_message(binary, key, binary) :: binary
   def open_message(message, key \\ nil, plaintext \\ nil) do
@@ -86,7 +83,7 @@ defmodule Saltpack do
         {"SIGNEDMESSAGE", msg}     -> Saltpack.Sign.open_message(msg, nil)
         {"DETACHEDSIGNATURE", msg} -> Saltpack.Sign.open_message(msg, plaintext)
         {"MESSAGE", msg}           -> msg
-        _                          -> :noop
+        _                          -> raise("No properly formatted message found.")
     end
   end
 
