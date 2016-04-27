@@ -4,9 +4,7 @@ defmodule Saltpack do
 
   https://saltpack.org/
 
-  This library presently only handles complete, ASCII-armored messages at rest.
-  Planned future support for streaming may entail a complete reconsideration of
-  the API.
+  Handling complete, ASCII-armored messages at rest.
   """
 
   @typedoc """
@@ -73,7 +71,7 @@ defmodule Saltpack do
   This may fail in spectacular ways with messages which are not properly
   formatted for the supplied key.
 
-  Opening a detached signature with plaintext will return the signing public key.
+  Opening a detached signature with `plaintext` will return the signing public key.
   All other forms return the decoded contents upon validation.
   """
   @spec open_message(binary, key, binary) :: binary

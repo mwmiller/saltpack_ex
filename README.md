@@ -8,7 +8,7 @@ A pure Elixir library implementing [saltpack](https://saltpack.org/)
 # add dependencies in mix.exs
 defp deps do
   [
-    {:saltpack, "~> 0.3"}
+    {:saltpack, "~> 1.0"}
   ]
 end
 
