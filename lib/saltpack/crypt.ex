@@ -74,7 +74,7 @@ defmodule Saltpack.Crypt do
     {payload, rest} = Msgpax.unpack_slice!(payloads)
     {tauth, sb} = {Enum.at(payload, 0) |> Enum.at(index), Enum.at(payload, 1)}
     oauth = :crypto.hmac(:sha512, mac, :crypto.hash(:sha512,Enum.join([hhash,nonce,sb])), 32)
-    if oauth != tauth, do: decrypt_error # Constant time compare?
+    if not Equivalex.equal?(oauth,tauth), do: decrypt_error
     payloads_open({rest, index, payload_key, hhash, mac}, nonce_count+1, [Kcl.secretunbox(sb, nonce, payload_key) | acc])
   end
 
