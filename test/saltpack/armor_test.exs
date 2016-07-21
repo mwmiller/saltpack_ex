@@ -1,5 +1,5 @@
 defmodule SaltpackArmorTest do
-  use PowerAssert
+  use ExUnit.Case
   import Saltpack.Armor
   doctest Saltpack.Armor
 

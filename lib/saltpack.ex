@@ -10,7 +10,7 @@ defmodule Saltpack do
   @typedoc """
   a public or private key
   """
-  @type key :: <<_ :: 32 * 8>>
+  @type key :: binary
 
   @typedoc """
   desired key variety

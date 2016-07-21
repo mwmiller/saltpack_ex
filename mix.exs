@@ -3,8 +3,8 @@ defmodule Saltpack.Mixfile do
 
   def project do
     [app: :saltpack,
-     version: "1.0.1",
-     elixir: "~> 1.2",
+     version: "1.0.3",
+     elixir: "~> 1.3",
      name: "saltpack",
      source_url: "https://github.com/mwmiller/saltpack_ex",
      build_embedded: Mix.env == :prod,
@@ -24,9 +24,8 @@ defmodule Saltpack.Mixfile do
       {:equivalex, "~> 0.1"},
       {:kcl, "~> 0.6"},
       {:msgpax, "~> 0.8"},
-      {:power_assert, "~> 0.0.8", only: :test},
-      {:earmark, "~> 0.2", only: :dev},
-      {:ex_doc, "~> 0.11", only: :dev},
+      {:earmark, "~> 1.0", only: :dev},
+      {:ex_doc, "~> 0.13", only: :dev},
     ]
   end
 
