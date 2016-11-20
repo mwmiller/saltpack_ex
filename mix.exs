@@ -3,7 +3,7 @@ defmodule Saltpack.Mixfile do
 
   def project do
     [app: :saltpack,
-     version: "1.0.3",
+     version: "1.0.4",
      elixir: "~> 1.3",
      name: "saltpack",
      source_url: "https://github.com/mwmiller/saltpack_ex",
@@ -23,9 +23,9 @@ defmodule Saltpack.Mixfile do
       {:basex, "~> 0.2"},
       {:equivalex, "~> 0.1"},
       {:kcl, "~> 0.6"},
-      {:msgpax, "~> 0.8"},
+      {:msgpax, "~> 1.0"},
       {:earmark, "~> 1.0", only: :dev},
-      {:ex_doc, "~> 0.13", only: :dev},
+      {:ex_doc, "~> 0.14", only: :dev},
     ]
   end
 
