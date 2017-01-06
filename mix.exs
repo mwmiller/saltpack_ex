@@ -3,15 +3,15 @@ defmodule Saltpack.Mixfile do
 
   def project do
     [app: :saltpack,
-     version: "1.0.4",
-     elixir: "~> 1.3",
+     version: "1.0.5",
+     elixir: "~> 1.4",
      name: "saltpack",
      source_url: "https://github.com/mwmiller/saltpack_ex",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     description: description,
-     package: package,
-     deps: deps]
+     description: description(),
+     package: package(),
+     deps: deps()]
   end
 
   def application do

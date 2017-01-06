@@ -69,14 +69,14 @@ defmodule Saltpack.Sign do
   end
 
   defp verify_msg_match({signature, hhash, opub}, text) do
-    if Kcl.valid_signature?(signature |> Msgpax.unpack!, mode_constant(2)<>:crypto.hash(:sha512, hhash<>text), opub), do: opub, else: sign_error
+    if Kcl.valid_signature?(signature |> Msgpax.unpack!, mode_constant(2)<>:crypto.hash(:sha512, hhash<>text), opub), do: opub, else: sign_error()
   end
 
   defp payloads_open(_finished_payloads, _n, [""|acc]), do: acc |> Enum.reverse |> Enum.join
   defp payloads_open({payloads, hhash, pub}, nonce_count, acc) do
     nonce = nonce(nonce_count)
     {[tsig, data], rest} = Msgpax.unpack_slice!(payloads)
-    if not Kcl.valid_signature?(tsig, mode_constant(1)<>:crypto.hash(:sha512, hhash<>nonce<>data), pub), do: sign_error
+    if not Kcl.valid_signature?(tsig, mode_constant(1)<>:crypto.hash(:sha512, hhash<>nonce<>data), pub), do: sign_error()
     payloads_open({rest, hhash, pub}, nonce_count+1, [data | acc])
   end
 
@@ -84,7 +84,7 @@ defmodule Saltpack.Sign do
     {contents, rest} = Msgpax.unpack_slice!(packet)
     hhash = :crypto.hash(:sha512,contents)
     [format, version, mode, opub, _nonce] = Msgpax.unpack!(contents)
-    if format != @format or version != @version or mode != emode, do: sign_error
+    if format != @format or version != @version or mode != emode, do: sign_error()
     {rest, hhash, opub}
   end
 

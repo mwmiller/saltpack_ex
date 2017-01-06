@@ -74,7 +74,7 @@ defmodule Saltpack.Crypt do
     {payload, rest} = Msgpax.unpack_slice!(payloads)
     {tauth, sb} = {Enum.at(payload, 0) |> Enum.at(index), Enum.at(payload, 1)}
     oauth = :crypto.hmac(:sha512, mac, :crypto.hash(:sha512,Enum.join([hhash,nonce,sb])), 32)
-    if not Equivalex.equal?(oauth,tauth), do: decrypt_error
+    if not Equivalex.equal?(oauth,tauth), do: decrypt_error()
     payloads_open({rest, index, payload_key, hhash, mac}, nonce_count+1, [Kcl.secretunbox(sb, nonce, payload_key) | acc])
   end
 
@@ -83,7 +83,7 @@ defmodule Saltpack.Crypt do
     hhash = :crypto.hash(:sha512,contents)
     [format, version, mode, epub, secret_box,recipients] = Msgpax.unpack!(contents)
     # Should be smarter here regarding version, eventually
-    if format != @format or version != @version or mode != @mode, do: decrypt_error
+    if format != @format or version != @version or mode != @mode, do: decrypt_error()
     {index, payload_key} = payload_info(recipients, priv, epub)
     {rest, index, payload_key, hhash,
      stateless_box(@nil_key, hhash |> first_bytes(24), priv, Kcl.secretunbox(secret_box, @header_sbox_nonce, payload_key)) |> last_bytes(32)}

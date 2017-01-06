@@ -52,7 +52,7 @@ defmodule Saltpack.Armor do
     def dearmor_message(m) do
      case m |> normalize_message |> String.split(".") do
         [h,p,f,_] -> {framed_message_type(h,f), dearmor_raw(p)}
-        _         -> dearmor_error
+        _         -> dearmor_error()
      end
     end
 
@@ -65,7 +65,7 @@ defmodule Saltpack.Armor do
                   %{"type" => type}               -> {type, "ENDSALTPACK"<>type}
                   _                               -> {nil, nil}
                 end
-      if f == pf, do: t, else: dearmor_error
+      if f == pf, do: t, else: dearmor_error()
     end
 
     @doc false
