@@ -37,7 +37,8 @@ defmodule Saltpack do
   """
   @spec encrypt_message(binary, [key], key, key, Saltpack.Armor.formatting_options) :: binary
   def encrypt_message(message, recipients, private, public \\ nil, opts \\ []) do
-     Saltpack.Crypt.create_message(message, recipients, private, public)
+    message
+       |> Saltpack.Crypt.create_message(recipients, private, public)
        |> Saltpack.Armor.armor_message("ENCRYPTED MESSAGE", opts)
   end
 
@@ -51,11 +52,13 @@ defmodule Saltpack do
   @spec sign_message(binary, key, key, signature_mode, Saltpack.Armor.formatting_options) :: binary
   def sign_message(message, private, public \\ nil, mode \\ :attached, opts \\ [])
   def sign_message(message, private, public, :attached, opts) do
-     Saltpack.Sign.create_message(message, private, 1, public)
+    message
+       |> Saltpack.Sign.create_message(private, 1, public)
        |> Saltpack.Armor.armor_message("SIGNED MESSAGE", opts)
   end
   def sign_message(message, private, public, :detached, opts) do
-     Saltpack.Sign.create_message(message, private, 2, public)
+    message
+       |> Saltpack.Sign.create_message(private, 2, public)
        |> Saltpack.Armor.armor_message("DETACHED SIGNATURE", opts)
   end
 

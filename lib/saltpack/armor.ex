@@ -26,23 +26,23 @@ defmodule Saltpack.Armor do
 
     @spec parse_options(formatting_options) :: {String.t, pos_integer, pos_integer}
     defp parse_options(options) do
-      { Keyword.get(options, :app, ""),
-        Keyword.get(options, :chars_per_word, 18),
-        Keyword.get(options, :words_per_line, 4),
+      {Keyword.get(options, :app, ""),
+       Keyword.get(options, :chars_per_word, 18),
+       Keyword.get(options, :words_per_line, 4),
       }
     end
 
     @doc false
-    def armor_message(m,t,o\\[]) do
-      {a,cpw,wpl} = parse_options(o)
-      {h,f} = head_foot(t,a)
-      Enum.join([h,m |> armor_raw |> format_payload({cpw,wpl}),f], ".\n")<>"."
+    def armor_message(m, t, o \\ []) do
+      {a, cpw, wpl} = parse_options(o)
+      {h, f} = head_foot(t, a)
+      Enum.join([h, m |> armor_raw |> format_payload({cpw, wpl}), f], ".\n") <> "."
     end
 
-    defp head_foot(t,a) do
-      app_part = if a == "", do: "", else: a<>" "
-      shared = app_part<>"SALTPACK "<>t
-      {"BEGIN "<>shared, "END "<>shared}
+    defp head_foot(t, a) do
+      app_part = if a == "", do: "", else: a <> " "
+      shared = app_part <> "SALTPACK " <> t
+      {"BEGIN " <> shared, "END " <> shared}
     end
 
     @doc false
@@ -51,18 +51,18 @@ defmodule Saltpack.Armor do
     @doc false
     def dearmor_message(m) do
      case m |> normalize_message |> String.split(".") do
-        [h,p,f,_] -> {framed_message_type(h,f), dearmor_raw(p)}
-        _         -> dearmor_error()
+        [h, p, f, _] -> {framed_message_type(h, f), dearmor_raw(p)}
+        _            -> dearmor_error()
      end
     end
 
     defp dearmor_error, do: raise("Invalid or incomplete message.")
 
     defp normalize_message(m), do: Regex.replace(~r/[>\s]+/, m, "")
-    defp framed_message_type(h,f) do
+    defp framed_message_type(h, f) do
       {t, pf} = case Regex.named_captures(~r/^BEGIN(?<app>[a-zA-Z0-9]+)?SALTPACK(?<type>ENCRYPTEDMESSAGE|SIGNEDMESSAGE|DETACHEDSIGNATURE|MESSAGE)$/, h) do
-                  %{"app" => app, "type" => type} -> {type, "END"<>app<>"SALTPACK"<>type}
-                  %{"type" => type}               -> {type, "ENDSALTPACK"<>type}
+                  %{"app" => app, "type" => type} -> {type, "END" <> app <> "SALTPACK" <> type}
+                  %{"type" => type}               -> {type, "ENDSALTPACK" <> type}
                   _                               -> {nil, nil}
                 end
       if f == pf, do: t, else: dearmor_error()
@@ -71,7 +71,7 @@ defmodule Saltpack.Armor do
     @doc false
     def dearmor_raw(s), do: s |> @armorer.decode
 
-    defp format_payload(s, {cpw, wpl}), do: s |> set_words(cpw,[]) |> set_lines(wpl,[])
+    defp format_payload(s, {cpw, wpl}), do: s |> set_words(cpw, []) |> set_lines(wpl, [])
 
     defp set_words(chars, cpw, acc) when byte_size(chars) <= cpw, do: [chars|acc] |> Enum.reverse
     defp set_words(chars, cpw, acc) when byte_size(chars) >  cpw do
