@@ -14,13 +14,13 @@ defmodule Saltpack.Armor do
 
     The start and end framing are always presented on separate lines.
 
-```
-72 (4 words of 18 characters)
-+3 (inter-word spaces)
-+1 (end-of-message indicator: `.`)
-==
-76 (default maximum line-length)
-```
+    ```
+    72 (4 words of 18 characters)
+    +3 (inter-word spaces)
+    +1 (end-of-message indicator: `.`)
+    ==
+    76 (default maximum line-length)
+    ```
     """
     @type formatting_options :: [app: String.t, chars_per_word: pos_integer, words_per_line: pos_integer]
 
