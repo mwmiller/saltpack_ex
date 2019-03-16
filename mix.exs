@@ -4,7 +4,7 @@ defmodule Saltpack.Mixfile do
   def project do
     [
       app: :saltpack,
-      version: "1.2.0",
+      version: "1.2.1",
       elixir: "~> 1.7",
       name: "saltpack",
       source_url: "https://github.com/mwmiller/saltpack_ex",
@@ -40,7 +40,7 @@ defmodule Saltpack.Mixfile do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README*", "LICENSE*"],
+      files: ["lib", "mix.exs", "README*", "LICENSE*", "mix.lock"],
       maintainers: ["Matt Miller"],
       licenses: ["MIT"],
       links: %{
