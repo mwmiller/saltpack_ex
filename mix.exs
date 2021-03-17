@@ -26,7 +26,6 @@ defmodule Saltpack.Mixfile do
       {:equivalex, "~> 1.0"},
       {:kcl, "~> 1.3"},
       {:msgpax, "~> 2.2"},
-      {:earmark, "~> 1.4", only: :dev},
       {:ex_doc, "~> 0.23", only: :dev},
     ]
   end
