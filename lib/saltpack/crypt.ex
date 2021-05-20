@@ -87,7 +87,10 @@ defmodule Saltpack.Crypt do
   defp authenticators([], _hash, acc), do: acc |> Enum.reverse()
 
   defp authenticators([r | rest], hash, acc),
-    do: authenticators(rest, hash, [Msgpax.Bin.new(:crypto.hmac(:sha512, r, hash, 32)) | acc])
+    do:
+      authenticators(rest, hash, [
+        Msgpax.Bin.new(:crypto.macN(:hmac, :sha512, r, hash, 32)) | acc
+      ])
 
   defp recipient_boxes([], _nonce, _payload, _priv, acc), do: acc |> Enum.reverse()
 
@@ -111,7 +114,10 @@ defmodule Saltpack.Crypt do
     nonce = nonce(nonce_count)
     {payload, rest} = Msgpax.unpack_slice!(payloads)
     {tauth, sb} = {payload |> Enum.at(0) |> Enum.at(index), Enum.at(payload, 1)}
-    oauth = :crypto.hmac(:sha512, mac, :crypto.hash(:sha512, Enum.join([hhash, nonce, sb])), 32)
+
+    oauth =
+      :crypto.macN(:hmac, :sha512, mac, :crypto.hash(:sha512, Enum.join([hhash, nonce, sb])), 32)
+
     if not Equivalex.equal?(oauth, tauth), do: decrypt_error()
 
     payloads_open({rest, index, payload_key, hhash, mac}, nonce_count + 1, [
