@@ -4,7 +4,7 @@ defmodule Saltpack.Mixfile do
   def project do
     [
       app: :saltpack,
-      version: "1.3.0",
+      version: "1.3.1",
       elixir: "~> 1.8",
       name: "saltpack",
       source_url: "https://github.com/mwmiller/saltpack_ex",
