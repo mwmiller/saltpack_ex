@@ -96,14 +96,17 @@ defmodule Saltpack.Armor do
   defp set_lines([], _wpl, acc), do: acc |> Enum.reverse() |> Enum.join("\n")
 
   defp set_lines(words, wpl, acc) do
-    {words, rest} = grab_words({}, wpl, words)
+    {words, rest} = grab_words([], wpl, words)
     set_lines(rest, wpl, [words |> Tuple.to_list() |> Enum.join(" ") | acc])
   end
 
-  defp grab_words(words, _count, []), do: {words, []}
+  defp grab_words(words, _count, []), do: {word_list_to_tuple(words), []}
 
-  defp grab_words(words, count, [h | t]) when tuple_size(words) < count,
-    do: grab_words(Tuple.append(words, h), count, t)
+  defp grab_words(words, count, [h | t]) when length(words) < count,
+    do: grab_words([h | words], count, t)
 
-  defp grab_words(words, count, left) when tuple_size(words) == count, do: {words, left}
+  defp grab_words(words, count, left) when length(words) == count,
+    do: {word_list_to_tuple(words), left}
+
+  defp word_list_to_tuple(words), do: words |> Enum.reverse() |> List.to_tuple()
 end
